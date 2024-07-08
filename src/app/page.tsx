@@ -48,6 +48,7 @@ const Home = () => {
     resetTranscript,
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition();
+  const [isClient, setIsClient] = useState(false);
   const [enable, setEnabled] = useState<boolean>(false);
   const [transcript2, setTranscript2] = useState<string>("");
   const [apiResponses, setApiResponses] = useState<ApiResponse[]>([]);
@@ -68,6 +69,15 @@ const Home = () => {
   useEffect(() => {
     handleTranscript(transcript2);
   }, [transcript2, handleTranscript]);
+  
+  useEffect(() => {
+    console.log('microphone transcript', transcript);
+    handleTranscript(transcript);
+  }, [transcript, handleTranscript]);
+
+  useEffect(() => setIsClient(true), [])
+
+  if (!isClient) return null
 
   return (
     <main className="flex min-h-screen flex-col items-center p-24">
@@ -79,11 +89,11 @@ const Home = () => {
         placeholder="Enter text..."
       />
       <div className="flex flex-row justify-between w-full gap-2">
-        <div className="flex-1 flex flex-col justify-center items-center bg-gray-700">
+        <div className="flex-1 flex flex-col justify-center bg-gray-700">
           <div style={{ fontSize: 16, fontWeight: "bold" }}>
             API Responses section:
           </div>
-          {apiResponses.map((res, i) => (
+          {apiResponses?.map((res, i) => (
             <div style={{ marginBottom: "8px" }} key={`${res.answer}-i`}>
               Response #{i}
               <div>
@@ -98,8 +108,7 @@ const Home = () => {
           ))}
         </div>
 
-        <div className="flex-1 flex flex-col justify-center items-center bg-gray-700">
-          {!browserSupportsSpeechRecognition && "Not Supported"}
+        <div className="flex-1 flex flex-col bg-gray-700">
           {browserSupportsSpeechRecognition && (
             <div>
               <p>Microphone: {listening ? "on" : "off"}</p>
@@ -118,6 +127,7 @@ const Home = () => {
               <p>{transcript}</p>
             </div>
           )}
+          {!browserSupportsSpeechRecognition && "Not Supported"}
         </div>
       </div>
     </main>
