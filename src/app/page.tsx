@@ -71,8 +71,9 @@ const Home = () => {
   }, [transcript2, handleTranscript]);
   
   useEffect(() => {
-    console.log('microphone transcript', transcript);
-    handleTranscript(transcript);
+    const sliced = transcript?.slice(-200)
+    console.log('microphone transcript sliced', sliced);
+    handleTranscript(sliced);
   }, [transcript, handleTranscript]);
 
   useEffect(() => setIsClient(true), [])
